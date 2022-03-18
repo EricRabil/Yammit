@@ -15,6 +15,20 @@ public protocol Configuration: Codable {
     static var path: String { get }
 }
 
+/// Configurations conforming to this protocol can control whether their config can be overwritten
+public protocol WriteLockableConfiguration {
+    static var readOnly: Bool { get }
+}
+
+private extension Configuration {
+    static var _readOnly: Bool {
+        if let lockable = self as? WriteLockableConfiguration.Type {
+            return lockable.readOnly
+        }
+        return false
+    }
+}
+
 public extension Configuration {
     static var url: URL { URL(fileURLWithPath: path) }
     
@@ -30,6 +44,9 @@ public extension Configuration {
             return config
         } catch {
             let defaults = Self()
+            if _readOnly {
+                return defaults
+            }
             defaults.save()
             
             return defaults
@@ -41,6 +58,9 @@ public extension Configuration {
     }
     
     func save() {
+        if Self._readOnly {
+            return
+        }
         do {
             try serialize().write(to: Self.url)
         } catch {
