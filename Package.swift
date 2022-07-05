@@ -14,8 +14,8 @@ let package = Package(
             targets: ["Yammit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/jpsim/Yams.git", from: "4.0.6"),
-        .package(name: "Swog", url: "https://github.com/ericrabil/swog", from: "1.0.1")
+        .package(url: "https://github.com/jpsim/Yams.git", from: "5.0.0"),
+        .package(name: "Swog", url: "https://github.com/ericrabil/swog", from: "1.0.4")
     ],
     targets: [
         .target(
